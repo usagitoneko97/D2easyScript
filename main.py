@@ -3,6 +3,9 @@ import pyHook
 from sendKeysTest import PressKey, ReleaseKey
 import pyautogui
 import time
+from PIL import ImageGrab
+import numpy as np
+import cv2
 
 Q = 0x10
 W = 0x11
@@ -22,6 +25,9 @@ def OnKeyboardEvent(event):
     elif event.Key == 'Add':
         pyautogui.moveTo(1125, 968)
         pyautogui.dragTo(1125, 929, 0.1001, button='left')
+    elif event.Key == 'Multiply':
+        printscreen = np.array(ImageGrab.grab())
+        cv2.imshow('window', cv2.cvtColor(printscreen, cv2.COLOR_BGR2RGB))
     # return True to pass the event to other handlers
     return True
 
