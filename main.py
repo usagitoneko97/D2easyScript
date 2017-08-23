@@ -66,6 +66,7 @@ def OnKeyboardEvent(event):
 
 def get_hero_loc():
     # get the screen, filter out every color except red, and find contours
+    # TODO performance need to test (check the time)
     printscreen = np.array(ImageGrab.grab())
     lower = np.array([170, 40, 0])
     upper = np.array([200, 60, 0])
@@ -73,27 +74,22 @@ def get_hero_loc():
     image, contours, hierarchy = cv2.findContours(shape_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     # for i in contours:
     #     np.sort(i)
+    cv2.imshow('window', image)
     previous_max = 0
-    previous_min = 1080
-    for element in contours:
-        max_val = np.amax(element)
-        min_val = np.amin(element)
-        if max_val > previous_max:
-            previous_max = max_val
-        if min_val < previous_min:
-            previous_min = min_val
-
-    print(previous_max)
-    print(previous_min)
-    print("------------------")
+    previous_min = 1900
     print(contours)
+    for element in contours:
+        for contours_num in element:
+            if contours_num[0, 0] > previous_max:
+                previous_max = contours_num[0, 0]
+            if contours_num[0, 0] < previous_min:
+                previous_min = contours_num[0, 0]
 
-    # print(type(contours))
-    # print((contours[0]))
-    randPlace = contours[0][0]
-    # print(randPlace.flat[0])
-    # print(randPlace.flat[1])
-    return randPlace.flat[0], randPlace.flat[1]
+    print("previous max = ", previous_max)
+    print("previous min = ", previous_min)
+    mean = (previous_max + previous_min) / 2
+    y_coordinate = contours[0][0]
+    return mean, y_coordinate.flat[1]
 
 def processImg(image):
     # convert to gray
