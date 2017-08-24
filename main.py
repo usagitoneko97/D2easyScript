@@ -67,7 +67,8 @@ def OnKeyboardEvent(event):
 def get_hero_loc():
     # get the screen, filter out every color except red, and find contours
     # TODO performance need to test (check the time)
-    printscreen = np.array(ImageGrab.grab())
+    last_time = time.time()
+    printscreen = np.array(ImageGrab.grab(bbox=(180, 90, 1780, 990)))  # 1600x900 in 1920x1080 with equal padding
     lower = np.array([170, 40, 0])
     upper = np.array([200, 60, 0])
     shape_mask = cv2.inRange(printscreen, lower, upper)
@@ -87,9 +88,11 @@ def get_hero_loc():
 
     print("previous max = ", previous_max)
     print("previous min = ", previous_min)
-    mean = (previous_max + previous_min) / 2
+    herobar_middle = previous_min + 40
     y_coordinate = contours[0][0]
-    return mean, y_coordinate.flat[1]
+
+    print('loop took {} seconds'.format(time.time() - last_time))
+    return herobar_middle+180, y_coordinate.flat[1]+90
 
 def processImg(image):
     # convert to gray
