@@ -1,6 +1,6 @@
 import pythoncom
 import pyHook
-from sendKeysTest import PressKey, ReleaseKey
+from send_keys import PressKey, ReleaseKey
 import pyautogui
 import time
 from PIL import ImageGrab
