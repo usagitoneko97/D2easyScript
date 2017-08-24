@@ -93,7 +93,7 @@ def get_hero_loc():
     y_coordinate = contours[0][0]
 
     print('loop took {} seconds'.format(time.time() - last_time))
-    return herobar_middle+180, y_coordinate.flat[1]+90
+    return herobar_middle+180, y_coordinate.flat[1]+90   # 180 and 90 is padding
 
 def processImg(image):
     # convert to gray
@@ -122,6 +122,9 @@ def poof():
     pressKeyboard(W)
     pressKeyboard(TAB)
     pressKeyboard(W)
+    pressKeyboard(TAB)
+    # pressKeyboard(W)
+    # pressKeyboard(TAB)
 
 def earthSpiritStun():
     pressKeyboard(D)
