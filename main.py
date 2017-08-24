@@ -33,18 +33,19 @@ def OnKeyboardEvent(event):
         pressKeyboard(Q)
         pressKeyboard(Q)
         pressKeyboard(R)
-        time.sleep(0.1)
-
-        # TODO: get to the center of hero with certain algorithm
+        time.sleep(0.2)
 
         x, y = get_hero_loc()
+        pressKeyboard(D)
+        prevs_time = time.time()
+        # TODO mouse moving take too much time
 
-        pyautogui.moveTo(x, y+40)                        # Note ************************
-        pressKeyboard(D)                                 # This is some useless program
-        pyautogui.click()                                # develop this just to play games
-        # cv2.imshow('window', image)                    # Please make a rocket instead
-    elif event.Key == 'Divide':                          # I just want to type something
-        pressKeyboard(C)                                 # Your keyboard really nice to type
+        pyautogui.moveTo(x, y+40)
+        pyautogui.click()
+        print('2nd loop took {} seconds'.format(time.time() - prevs_time))
+        # cv2.imshow('window', image)
+    elif event.Key == 'Divide':
+        pressKeyboard(C)
         x, y = get_hero_loc()
         pyautogui.moveTo(x, y+40)
         pyautogui.click()
