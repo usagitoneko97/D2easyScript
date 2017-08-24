@@ -18,6 +18,7 @@ V = 0x2F
 Z = 0x2C
 TAB = 0x0F
 
+
 def OnKeyboardEvent(event):
     print(event.Key)
     if event.Key == 'Subtract':
@@ -42,8 +43,8 @@ def OnKeyboardEvent(event):
         prevs_time = time.time()
         # TODO mouse moving take too much time
 
-        pyautogui.moveTo(x, y+40)
-        pyautogui.click()
+        # pyautogui.moveTo(x, y+40)
+        pyautogui.click(x, y+60)
         print('2nd loop took {} seconds'.format(time.time() - prevs_time))
         # cv2.imshow('window', image)
     elif event.Key == 'Divide':
