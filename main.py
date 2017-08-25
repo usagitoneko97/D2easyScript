@@ -69,6 +69,7 @@ def OnKeyboardEvent(event):
         x, y = get_hero_loc()
         # print(x, y)
 
+
     elif event.Key == 'Numpad0':
         current_time = time.time()
         x, y = get_hero_loc()
@@ -83,7 +84,6 @@ def OnKeyboardEvent(event):
         pressKeyboard(C)
         pyautogui.click(x, y + 40)
         lina()
-
 
     # return True to pass the event to other handlers
     return True
