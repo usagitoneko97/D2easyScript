@@ -50,6 +50,8 @@ def OnKeyboardEvent(event):
         mouse_click_hero(x, y)
         print('2nd loop took {} seconds'.format(time.time() - prevs_time))
         # cv2.imshow('window', image)
+
+    #invoker sunstrike
     elif event.Key == 'Divide':
         pressKeyboard(C)
         x, y = get_hero_loc()
@@ -70,8 +72,8 @@ def OnKeyboardEvent(event):
     elif event.Key == 'Numpad0':
         current_time = time.time()
         x, y = get_hero_loc()
-        print("X axis = ", x)
-        mouse_click_hero(x+55, y)
+        hero_offset = calculate_hero_offset(x)
+        mouse_click_hero(x+int(hero_offset), y)
 
         print('numpad0 loop took {} seconds'.format(time.time() - current_time))
 
@@ -86,6 +88,24 @@ def OnKeyboardEvent(event):
     # return True to pass the event to other handlers
     return True
 
+
+def calculate_hero_offset(x):
+    """
+    # FIXME :too much offset around the center
+    calculate hero position relative to health bar
+    :param x: x coordinate
+    :return: hero offset
+    """
+    x_without_padding = x - 180
+    print("x without padding = ", x_without_padding)
+    if x_without_padding < 800:
+        hero_offset = 100 - ((x_without_padding / 800) * 100)
+
+    else:
+        hero_offset = -(((x_without_padding - 800) / 800) * 100)
+
+    print("hero offset = ", hero_offset)
+    return hero_offset
 
 def mouse_click_hero(x, y):
     win32api.SetCursorPos((x, y+60))
