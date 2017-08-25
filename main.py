@@ -6,6 +6,8 @@ import time
 from PIL import ImageGrab
 import numpy as np
 import cv2
+import win32api
+import win32con
 
 Q = 0x10
 W = 0x11
@@ -44,14 +46,13 @@ def OnKeyboardEvent(event):
         # TODO mouse moving take too much time
 
         # pyautogui.moveTo(x, y+40)
-        pyautogui.click(x, y+60)
+        mouse_click_hero(x, y)
         print('2nd loop took {} seconds'.format(time.time() - prevs_time))
         # cv2.imshow('window', image)
     elif event.Key == 'Divide':
         pressKeyboard(C)
         x, y = get_hero_loc()
-        pyautogui.moveTo(x, y+40)
-        pyautogui.click()
+        mouse_click_hero(x, y)
         time.sleep(0.85)
         pressKeyboard(D)
         pyautogui.click()
@@ -65,8 +66,21 @@ def OnKeyboardEvent(event):
         x, y = get_hero_loc()
         # print(x, y)
 
+    elif event.Key == 'Numpad0':
+        current_time = time.time()
+        x, y = get_hero_loc()
+        mouse_click_hero(x, y)
+
+        print('numpad0 loop took {} seconds'.format(time.time() - current_time))
+
     # return True to pass the event to other handlers
     return True
+
+
+def mouse_click_hero(x, y):
+    win32api.SetCursorPos((x, y+60))
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y+60, 0, 0)
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y+60, 0, 0)
 
 def get_hero_loc():
     # get the screen, filter out every color except red, and find contours
@@ -74,7 +88,7 @@ def get_hero_loc():
     last_time = time.time()
     printscreen = np.array(ImageGrab.grab(bbox=(180, 90, 1780, 990)))  # 1600x900 in 1920x1080 with equal padding
     lower = np.array([170, 40, 0])
-    upper = np.array([200, 60, 0])
+    upper = np.array([243, 60, 0])
     shape_mask = cv2.inRange(printscreen, lower, upper)
     image, contours, hierarchy = cv2.findContours(shape_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     # for i in contours:
@@ -92,7 +106,7 @@ def get_hero_loc():
 
     print("previous max = ", previous_max)
     print("previous min = ", previous_min)
-    herobar_middle = previous_min + 40
+    herobar_middle = previous_min + 50
     y_coordinate = contours[0][0]
 
     print('loop took {} seconds'.format(time.time() - last_time))
