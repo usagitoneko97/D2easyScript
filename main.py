@@ -69,7 +69,8 @@ def OnKeyboardEvent(event):
     elif event.Key == 'Numpad0':
         current_time = time.time()
         x, y = get_hero_loc()
-        mouse_click_hero(x, y)
+        print("X axis = ", x)
+        mouse_click_hero(x+55, y)
 
         print('numpad0 loop took {} seconds'.format(time.time() - current_time))
 
