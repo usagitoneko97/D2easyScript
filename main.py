@@ -18,6 +18,7 @@ F = 0x21
 C = 0x2E
 V = 0x2F
 Z = 0x2C
+P = 0x19
 TAB = 0x0F
 
 
@@ -73,6 +74,14 @@ def OnKeyboardEvent(event):
         mouse_click_hero(x+55, y)
 
         print('numpad0 loop took {} seconds'.format(time.time() - current_time))
+
+    elif event.Key=='P':
+        x, y = get_hero_loc()
+        #pyautogui.moveTo()
+        pressKeyboard(C)
+        pyautogui.click(x, y + 40)
+        lina()
+
 
     # return True to pass the event to other handlers
     return True
@@ -143,6 +152,14 @@ def poof():
     pressKeyboard(TAB)
     # pressKeyboard(W)
     # pressKeyboard(TAB)
+
+def lina():
+    time.sleep(1.7)
+    pressKeyboard(W)
+    pyautogui.click()
+    time.sleep(0.2)
+    pressKeyboard(Q)
+    pyautogui.click()
 
 def earthSpiritStun():
     pressKeyboard(D)
