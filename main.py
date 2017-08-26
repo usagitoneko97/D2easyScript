@@ -77,8 +77,10 @@ def OnKeyboardEvent(event):
         x, y = get_hero_loc()
         # pyautogui.moveTo()
         pressKeyboard(C)
-        pyautogui.click(x, y + 40)
+        hero_offset = calculate_hero_offset(x)
+        mouse_click_hero(x + int(hero_offset), y)
         lina()
+        mouse_click_hero(x + int(hero_offset), y)
 
     # return True to pass the event to other handlers
     return True
@@ -174,6 +176,9 @@ def lina():
     time.sleep(0.2)
     pressKeyboard(Q)
     pyautogui.click()
+    time.sleep(1.0)
+    pressKeyboard(R)
+
 
 def earthSpiritStun():
     pressKeyboard(D)
