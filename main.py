@@ -73,17 +73,16 @@ def OnKeyboardEvent(event):
         current_time = time.time()
         x, y = get_hero_loc()
         hero_offset = calculate_hero_offset(x)
-        mouse_click_hero(x+int(hero_offset), y)
+        mouse_click_hero(x+hero_offset, y)
 
         print('numpad0 loop took {} seconds'.format(time.time() - current_time))
 
     elif event.Key=='P':
         x, y = get_hero_loc()
-        #pyautogui.moveTo()
+        # pyautogui.moveTo()
         pressKeyboard(C)
         pyautogui.click(x, y + 40)
         lina()
-
 
     # return True to pass the event to other handlers
     return True
@@ -91,7 +90,6 @@ def OnKeyboardEvent(event):
 
 def calculate_hero_offset(x):
     """
-    # FIXME :too much offset around the center
     calculate hero position relative to health bar
     :param x: x coordinate
     :return: hero offset
@@ -99,13 +97,16 @@ def calculate_hero_offset(x):
     x_without_padding = x - 180
     print("x without padding = ", x_without_padding)
     if x_without_padding < 800:
-        hero_offset = 100 - ((x_without_padding / 800) * 100)
+        factor = 45-((x_without_padding / 800) * 45) + 55
+        hero_offset = factor - ((x_without_padding / 800) * factor)
 
     else:
-        hero_offset = -(((x_without_padding - 800) / 800) * 100)
+        factor = (((x_without_padding-800) / 800) * 45) + 55
+        hero_offset = -(((x_without_padding - 800) / 800) * factor)
 
+    print("factor = ", factor)
     print("hero offset = ", hero_offset)
-    return hero_offset
+    return int(hero_offset)
 
 def mouse_click_hero(x, y):
     win32api.SetCursorPos((x, y+60))
