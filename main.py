@@ -6,26 +6,44 @@ import time
 from PIL import ImageGrab
 import numpy as np
 import cv2
+import win32api
+import win32con
 
+# List of scan code
+# http://www.gamespp.com/directx/directInputKeyboardScanCodes.html
 Q = 0x10
 W = 0x11
 E = 0x12
 R = 0x13
 D = 0x20
 F = 0x21
+Z = 0x2C
+X = 0x2D
 C = 0x2E
 V = 0x2F
-Z = 0x2C
+B = 0x30
 P = 0x19
 TAB = 0x0F
+SPACE = 0x39
+
+SKILL_1 = Q
+SKILL_2 = W
+SKILL_3 = E
+SKILL_4 = R
+SKILL_5 = D
+SKILL_6 = F
+
+ITEM_1 = Z
+ITEM_2 = X
+ITEM_3 = C
+ITEM_4 = V
+ITEM_5 = B
+ITEM_6 = SPACE
 
 
 def OnKeyboardEvent(event):
     print(event.Key)
     if event.Key == 'Subtract':
-        print("here")
-        print("event key: ", event.Key)
-        # alacrity()
         poof()
     elif event.Key == 'Add':
         pyautogui.moveTo(1125, 968)
@@ -33,49 +51,66 @@ def OnKeyboardEvent(event):
     elif event.Key == 'Multiply':
         #demonstration
         alacrity()
-        pressKeyboard(Q)
-        pressKeyboard(Q)
-        pressKeyboard(Q)
-        pressKeyboard(R)
+        pressKeyboard(SKILL_1)
+        pressKeyboard(SKILL_1)
+        pressKeyboard(SKILL_1)
+        pressKeyboard(SKILL_4)
         time.sleep(0.2)
 
         x, y = get_hero_loc()
+        offset = calculate_hero_offset(x)
         pressKeyboard(D)
         prevs_time = time.time()
-        # TODO mouse moving take too much time
-
-        # pyautogui.moveTo(x, y+40)
-        pyautogui.click(x, y+60)
+        mouse_click_hero(x+offset, y)
         print('2nd loop took {} seconds'.format(time.time() - prevs_time))
         # cv2.imshow('window', image)
-    elif event.Key == 'Divide':
-        pressKeyboard(C)
+
+    elif event.Key == 'Numpad0':
+        current_time = time.time()
         x, y = get_hero_loc()
-        pyautogui.moveTo(x, y+40)
-        pyautogui.click()
-        time.sleep(0.85)
-        pressKeyboard(D)
-        pyautogui.click()
-    # elif event.Key == 'G':
-        pressKeyboard(C)
-        pyautogui.click()
-        time.sleep(1.5)
-        pressKeyboard(W)
-        pyautogui.click()
-    elif event.Key == 'Numpad3':
-        x, y = get_hero_loc()
-        # print(x, y)
+        hero_offset = calculate_hero_offset(x)
+        mouse_click_hero(x+hero_offset, y)
+
+        print('numpad0 loop took {} seconds'.format(time.time() - current_time))
 
     elif event.Key=='P':
         x, y = get_hero_loc()
-        #pyautogui.moveTo()
+        # pyautogui.moveTo()
         pressKeyboard(C)
         pyautogui.click(x, y + 40)
         lina()
 
-
     # return True to pass the event to other handlers
     return True
+
+
+def calculate_hero_offset(x):
+    """
+    calculate hero position relative to health bar
+    :param x: x coordinate
+    :return: hero offset
+    """
+    x_without_padding = x - 180
+    print("x without padding = ", x_without_padding)
+    if x_without_padding < 600:
+        factor = 45-((x_without_padding / 800) * 45) + 45
+        hero_offset = factor - ((x_without_padding / 800) * factor)
+    elif x_without_padding > 1000:
+        factor = (((x_without_padding-800) / 800) * 45) + 45
+        hero_offset = -(((x_without_padding - 800) / 800) * factor)
+    else:
+        factor = 0
+        hero_offset = 0
+    print("factor = ", factor)
+    print("hero offset = ", hero_offset)
+    return int(hero_offset)
+
+
+def mouse_click_hero(x, y):
+    win32api.SetCursorPos((x, y+60))
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y+60, 0, 0)
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y+60, 0, 0)
+
 
 def get_hero_loc():
     # get the screen, filter out every color except red, and find contours
@@ -83,7 +118,7 @@ def get_hero_loc():
     last_time = time.time()
     printscreen = np.array(ImageGrab.grab(bbox=(180, 90, 1780, 990)))  # 1600x900 in 1920x1080 with equal padding
     lower = np.array([170, 40, 0])
-    upper = np.array([200, 60, 0])
+    upper = np.array([243, 60, 0])
     shape_mask = cv2.inRange(printscreen, lower, upper)
     image, contours, hierarchy = cv2.findContours(shape_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     # for i in contours:
@@ -107,12 +142,6 @@ def get_hero_loc():
     print('loop took {} seconds'.format(time.time() - last_time))
     return herobar_middle+180, y_coordinate.flat[1]+90   # 180 and 90 is padding
 
-def processImg(image):
-    # convert to gray
-    original_image = image
-    processedImg = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    processedImg = cv2.Canny(processedImg, threshold1=200, threshold2=300)
-    return processedImg
 
 def alacrity():
     pressKeyboard(W)
