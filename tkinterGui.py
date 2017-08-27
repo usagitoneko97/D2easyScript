@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox as msg
 import pyHook
+from main import OnKeyboardEvent as Oke
 
 show_something = False
 
@@ -49,6 +50,7 @@ def dummy_callback():
 def OnKeyboardEvent(event):
     print("show something = ", show_something.get())
     print(event.Key)
+    Oke(event)
     return True
 
 # create a hook manager

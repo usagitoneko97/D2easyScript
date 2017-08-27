@@ -190,10 +190,10 @@ def pressKeyboard(vkCode):
     ReleaseKey(vkCode)
 
 # create a hook manager
-hm = pyHook.HookManager()
+# hm = pyHook.HookManager()
 # watch for all mouse event
-hm.KeyDown = OnKeyboardEvent
+# hm.KeyDown = OnKeyboardEvent
 # set the hook
-hm.HookKeyboard()
+# hm.HookKeyboard()
 # wait forever
-pythoncom.PumpMessages()
+# pythoncom.PumpMessages()
