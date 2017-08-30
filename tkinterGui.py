@@ -3,10 +3,41 @@ from tkinter import ttk
 from tkinter import messagebox as msg
 import pyHook
 from main import OnKeyboardEvent as Oke
+import tkSimpleDialog
+
+Q = 0x10
+W = 0x11
+E = 0x12
+R = 0x13
+D = 0x20
+F = 0x21
+Z = 0x2C
+X = 0x2D
+C = 0x2E
+V = 0x2F
+B = 0x30
+P = 0x19
+TAB = 0x0F
+SPACE = 0x39
+
 
 show_something = False
+SKILL_1 = Q
+SKILL_2 = W
+SKILL_3 = E
+SKILL_4 = R
+SKILL_5 = D
+SKILL_6 = F
 
-class testing_gui(tk.Tk):
+ITEM_1 = Z
+ITEM_2 = X
+ITEM_3 = C
+ITEM_4 = V
+ITEM_5 = B
+ITEM_6 = SPACE
+
+
+class TestingGui(tk.Tk):
     def __init__(self):
         super().__init__()
         global show_something
@@ -34,6 +65,9 @@ class testing_gui(tk.Tk):
         shortcut_bar = tk.Frame(self, height=25, background='light sea green')
         shortcut_bar.pack(expand='no', fill='x')
 
+        self.skill_1_button = tk.Button(self, text="skill 1", command=self.button_callback)
+        self.skill_1_button.pack()
+
     def greet(self):
         print("Greetings!")
 
@@ -41,6 +75,9 @@ class testing_gui(tk.Tk):
         global show_something
         # show_something = self.show_something.get()
         print("here")
+
+    def button_callback(self):
+        d = myDialog(self)
 
 
 def dummy_callback():
@@ -53,6 +90,25 @@ def OnKeyboardEvent(event):
     Oke(event)
     return True
 
+e1 = 0
+
+
+class myDialog(tkSimpleDialog.Dialog):
+
+    def body(self, master):
+        global e1
+        tk.Label(master, text="First:").grid(row=0)
+
+        e1 = tk.Entry(master)
+        e1.grid(row=0, column=1)
+        return e1  # initial focus
+
+    # def apply(self):
+    #     first = e1.get()
+    #     print("first = ", first)
+    #     pass
+
+
 # create a hook manager
 hm = pyHook.HookManager()
 # watch for all mouse event
@@ -61,7 +117,7 @@ hm.KeyDown = OnKeyboardEvent
 hm.HookKeyboard()
 
 
-gui = testing_gui()
+gui = TestingGui()
 try:
     gui.mainloop()
 except KeyboardInterrupt:
