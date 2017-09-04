@@ -38,6 +38,8 @@ ITEM_6 = SPACE
 
 
 class TestingGui(tk.Tk):
+    global hm
+
     def __init__(self):
         super().__init__()
         global show_something
@@ -68,6 +70,12 @@ class TestingGui(tk.Tk):
         self.skill_1_button = tk.Button(self, text="skill 1", command=self.button_callback)
         self.skill_1_button.pack()
 
+        self.start_button = tk.Button(self, text="start", command=self.start)
+        self.start_button.pack()
+
+        self.stop_button = tk.Button(self, text="stop", command=self.stop)
+        self.stop_button.pack()
+
     def greet(self):
         print("Greetings!")
 
@@ -77,7 +85,15 @@ class TestingGui(tk.Tk):
         print("here")
 
     def button_callback(self):
-        d = myDialog(self)
+        d = myDialog(self, title='skill 1')
+
+    def start(self):
+        # TODO: add ui indication to user that it is started
+        hm.HookKeyboard()
+
+    def stop(self):
+        # TODO: exception for unhook
+        hm.UnhookKeyboard()
 
 
 def dummy_callback():
@@ -95,13 +111,22 @@ e1 = 0
 
 class myDialog(tkSimpleDialog.Dialog):
 
+
     def body(self, master):
         global e1
-        tk.Label(master, text="First:").grid(row=0)
+#        tk.Label(master, text="First:").grid(row=0)
+        tk_text = tk.Text(master, height=1, width=15, font=("Times", 12, "bold"), insertwidth=0, state=tk.DISABLED)
+        #TODO: keyboard binding generate error
+        tk_text.bind("<Key>", self.keyboard_ev)
+        tk_text.insert(tk.INSERT, "D")
+        tk_text.grid(row=1, column=1)
+        # e1 = tk.Entry(master, width=1)
+        # e1.grid(row=0, column=1)
+        return tk_text  # initial focus
 
-        e1 = tk.Entry(master)
-        e1.grid(row=0, column=1)
-        return e1  # initial focus
+    def keyboard_ev(self, event):
+        print("keybioard ev here")
+        return True
 
     # def apply(self):
     #     first = e1.get()
@@ -114,7 +139,8 @@ hm = pyHook.HookManager()
 # watch for all mouse event
 hm.KeyDown = OnKeyboardEvent
 # set the hook
-hm.HookKeyboard()
+# hm.UnhookKeyboard()
+
 
 
 gui = TestingGui()
